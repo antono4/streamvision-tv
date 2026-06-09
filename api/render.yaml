@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: streamvision-api
+    env: node
+    region: singapore
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    autoDeploy:
+      branch: master
+      enabled: true
