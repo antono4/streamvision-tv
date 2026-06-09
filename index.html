@@ -1982,6 +1982,42 @@
                 return;
             }
             
+            // Check if static cards exist and update them with full data
+            var existingCards = tvGridElement.querySelectorAll('.tv-card[data-rendered="static"]');
+            if (existingCards.length > 0) {
+                console.log('Static cards found, will be replaced with full dynamic cards');
+                // Replace static cards with dynamic ones
+                const html = filteredChannels.map((channel, index) => `
+                    <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
+                        <div class="tv-card-image">
+                            <img src="${channel.image}" alt="${channel.name}" loading="lazy">
+                            <div class="tv-card-overlay">
+                                <div class="play-btn">▶</div>
+                            </div>
+                            <div class="tv-card-badge tv-card-live">LIVE</div>
+                            <div class="tv-card-badge tv-card-quality">${channel.quality}</div>
+                        </div>
+                        <div class="tv-card-content">
+                            <div class="tv-card-flag">${channel.country}</div>
+                            <h3 class="tv-card-title">${channel.name}</h3>
+                            <p class="tv-card-category">${getCategoryName(channel.category)}</p>
+                            <div class="tv-card-meta">
+                                <div class="tv-card-viewers">
+                                    <span>●</span> ${formatViewers(channel.viewers)} penonton
+                                </div>
+                                <div class="tv-card-rating">
+                                    ★ ${channel.rating}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                tvGridElement.innerHTML = html;
+                console.log('Replaced static cards with', filteredChannels.length, 'dynamic cards');
+                return;
+            }
+            
             // Check if cards already exist
             if (tvGridElement.querySelectorAll('.tv-card').length > 0) {
                 console.log('Cards already rendered, skipping');
