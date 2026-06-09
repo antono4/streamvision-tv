@@ -1868,7 +1868,10 @@
         async function init() {
             const apiStatus = document.getElementById('apiStatus');
             
-            // Try to fetch from API first
+            // Always start with local data first
+            filteredChannels = [...tvChannels];
+            
+            // Try to fetch from API
             try {
                 const response = await fetch(API_BASE + '/api/health');
                 if (response.ok) {
@@ -1877,7 +1880,21 @@
                         isAPIConnected = true;
                         apiStatus.className = 'api-status online';
                         apiStatus.querySelector('.status-text').textContent = 'API Online';
+                        
+                        // Fetch channels from API
+                        const channelsResponse = await fetch(API_BASE + '/api/channels');
+                        if (channelsResponse.ok) {
+                            const channelsData = await channelsResponse.json();
+                            if (channelsData.success && channelsData.data.length > 0) {
+                                apiChannels = channelsData.data;
+                                tvChannels.length = 0;
+                                apiChannels.forEach(ch => tvChannels.push(ch));
+                                filteredChannels = [...tvChannels];
+                            }
+                        }
                     }
+                } else {
+                    throw new Error('API not responding');
                 }
             } catch (error) {
                 console.log('API not available, using local data');
@@ -1886,25 +1903,12 @@
                 apiStatus.querySelector('.status-text').textContent = 'Local Mode';
             }
             
-            // Fetch channels
-            try {
-                const response = await fetch(API_BASE + '/api/channels');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success && data.data.length > 0) {
-                        apiChannels = data.data;
-                        // Use API data instead of local data
-                        tvChannels.length = 0;
-                        apiChannels.forEach(ch => tvChannels.push(ch));
-                    }
-                }
-            } catch (error) {
-                console.log('Using local channel data');
-            }
-            
-            filterChannels();
+            // Always render cards immediately
+            renderTVCards();
+            console.log('Rendered', filteredChannels.length, 'channels');
         }
         
+        // Call init immediately when script loads
         init();
 
         // Animate cards on scroll
