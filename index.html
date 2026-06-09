@@ -2049,4 +2049,68 @@
         mutationObserver.observe(document.getElementById('tvGrid'), { childList: true });
     </script>
 </body>
+    
+    <!-- Force initialization -->
+    <script>
+        // Immediate initialization
+        (function() {
+            console.log('Force init: Starting');
+            var channelCount = typeof tvChannels !== 'undefined' ? tvChannels.length : 0;
+            console.log('Force init: tvChannels found, count =', channelCount);
+            
+            // Wait for DOM to be ready
+            function doInit() {
+                console.log('Force init: doInit called');
+                var tvGrid = document.getElementById('tvGrid');
+                if (!tvGrid) {
+                    console.log('Force init: tvGrid not found, retrying...');
+                    setTimeout(doInit, 100);
+                    return;
+                }
+                
+                // Check if cards already rendered
+                if (tvGrid.querySelectorAll('.tv-card').length > 0) {
+                    console.log('Force init: Cards already rendered');
+                    return;
+                }
+                
+                // Get channels
+                var channels = typeof tvChannels !== 'undefined' ? tvChannels : [];
+                console.log('Force init: Rendering', channels.length, 'channels');
+                
+                // Render
+                var html = '';
+                channels.forEach(function(channel, index) {
+                    html += '<div class="tv-card" onclick="openChannel(' + channel.id + ')" style="animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">';
+                    html += '<div class="tv-card-image">';
+                    html += '<img src="' + channel.image + '" alt="' + channel.name + '" loading="lazy">';
+                    html += '<div class="tv-card-overlay"><div class="play-btn">▶</div></div>';
+                    html += '<div class="tv-card-badge tv-card-live">LIVE</div>';
+                    html += '<div class="tv-card-badge tv-card-quality">' + channel.quality + '</div>';
+                    html += '</div>';
+                    html += '<div class="tv-card-content">';
+                    html += '<div class="tv-card-flag">' + channel.country + '</div>';
+                    html += '<h3 class="tv-card-title">' + channel.name + '</h3>';
+                    html += '<p class="tv-card-category">' + channel.category + '</p>';
+                    html += '<div class="tv-card-meta">';
+                    html += '<div class="tv-card-viewers"><span>●</span> ' + channel.viewers + ' penonton</div>';
+                    html += '<div class="tv-card-rating">★ ' + channel.rating + '</div>';
+                    html += '</div></div></div>';
+                });
+                
+                tvGrid.innerHTML = html;
+                console.log('Force init: Rendered', channels.length, 'cards');
+            }
+            
+            // Try immediately
+            if (document.readyState === 'complete') {
+                doInit();
+            } else {
+                window.addEventListener('load', doInit);
+            }
+            
+            // Also try after a delay
+            setTimeout(doInit, 1000);
+        })();
+    </script>
 </html>
