@@ -497,6 +497,35 @@
             padding-bottom: 60px;
         }
 
+        .loading-channels {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,51,102,0.2);
+            border-top-color: #ff3366;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loading-channels p {
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .tv-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
@@ -1276,7 +1305,10 @@
     </section>
 
     <div class="tv-grid" id="tvGrid">
-        <!-- TV cards will be injected here by JavaScript -->
+        <div class="loading-channels">
+            <div class="loading-spinner"></div>
+            <p>Memuat saluran TV...</p>
+        </div>
     </div>
 
     <!-- Video Modal -->
@@ -1654,7 +1686,8 @@
         }
 
         function renderTVCards() {
-            tvGrid.innerHTML = filteredChannels.map((channel, index) => `
+            console.log('renderTVCards called with', filteredChannels.length, 'channels');
+            const html = filteredChannels.map((channel, index) => `
                 <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
                     <div class="tv-card-image">
                         <img src="${channel.image}" alt="${channel.name}" loading="lazy">
@@ -1679,6 +1712,7 @@
                     </div>
                 </div>
             `).join('');
+            tvGrid.innerHTML = html;
         }
 
         function filterChannels() {
@@ -1870,11 +1904,14 @@
             
             // Always start with local data first
             filteredChannels = [...tvChannels];
+            console.log('Init: Starting with', tvChannels.length, 'channels');
             
             // Render cards immediately with local data
             if (typeof renderTVCards === 'function') {
+                console.log('Init: Rendering', filteredChannels.length, 'cards');
                 renderTVCards();
-                console.log('Rendered', filteredChannels.length, 'channels with local data');
+            } else {
+                console.error('renderTVCards function not found!');
             }
             
             // Try to fetch from API in background
