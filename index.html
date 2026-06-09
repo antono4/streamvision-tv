@@ -2012,6 +2012,14 @@
         } else {
             init();
         }
+        
+        // Fallback: call init after a short delay to ensure DOM is ready
+        setTimeout(function() {
+            if (document.querySelectorAll('.tv-card').length === 0) {
+                console.log('Fallback: calling init after timeout');
+                init();
+            }
+        }, 500);
 
         // Animate cards on scroll
         const observer = new IntersectionObserver((entries) => {
@@ -2026,6 +2034,19 @@
         document.querySelectorAll('.tv-card').forEach(card => {
             observer.observe(card);
         });
+        
+        // Also observe dynamically added cards
+        const mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.classList && node.classList.contains('tv-card')) {
+                        observer.observe(node);
+                    }
+                });
+            });
+        });
+        
+        mutationObserver.observe(document.getElementById('tvGrid'), { childList: true });
     </script>
 </body>
 </html>
