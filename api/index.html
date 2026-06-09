@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamVision - TV Online Seluruh Dunia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --bg-card-hover: #222230;
+            --accent-primary: #ff3366;
+            --accent-secondary: #00d4ff;
+            --accent-tertiary: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #606070;
+            --gradient-1: linear-gradient(135deg, #ff3366 0%, #ff6b35 100%);
+            --gradient-2: linear-gradient(135deg, #00d4ff 0%, #0ea5e9 100%);
+            --gradient-3: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            --gradient-hero: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.8) 50%, rgba(10,10,15,1) 100%);
+            --shadow-glow: 0 0 40px rgba(255,51,102,0.3);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
+
+        .header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            padding: 16px 40px; display: flex; justify-content: space-between;
+            align-items: center; background: rgba(10,10,15,0.8);
+            backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-icon {
+            width: 48px; height: 48px; background: var(--gradient-1);
+            border-radius: var(--radius-md); display: flex; align-items: center;
+            justify-content: center; font-size: 24px; box-shadow: var(--shadow-glow);
+        }
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700;
+            background: var(--gradient-1); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+        }
+
+        .nav-menu { display: flex; gap: 32px; list-style: none; }
+        .nav-menu a { color: var(--text-secondary); text-decoration: none; font-weight: 500; font-size: 15px; transition: color 0.3s; }
+        .nav-menu a:hover { color: var(--text-primary); }
+
+        .search-box { position: relative; width: 280px; }
+        .search-box input {
+            width: 100%; padding: 12px 20px 12px 48px; background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
+            color: var(--text-primary); font-size: 14px; transition: all 0.3s;
+        }
+        .search-box input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 20px rgba(255,51,102,0.2); }
+        .search-box::before { content: '🔍'; position: absolute; left: 18px; top: 50%; transform: translateY(-50%); }
+
+        .btn { padding: 10px 24px; border-radius: 50px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s; border: none; text-decoration: none; }
+        .btn-primary { background: var(--gradient-1); color: white; box-shadow: 0 4px 20px rgba(255,51,102,0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,51,102,0.5); }
+
+        .hero { min-height: 70vh; display: flex; align-items: center; padding: 140px 40px 80px; position: relative; overflow: hidden; }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 20%,rgba(255,51,102,0.15) 0%,transparent 50%),
+                        radial-gradient(ellipse at 80%,rgba(0,212,255,0.1) 0%,transparent 50%),
+                        radial-gradient(ellipse at 50%,rgba(168,85,247,0.08) 0%,transparent 60%);
+            z-index: 0;
+        }
+        .hero-content { max-width: 700px; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,51,102,0.15); border: 1px solid rgba(255,51,102,0.3); border-radius: 50px; font-size: 13px; font-weight: 500; color: var(--accent-primary); margin-bottom: 24px; }
+        .hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(48px,6vw,72px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; }
+        .hero h1 span { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-description { font-size: 18px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 40px; }
+        .hero-actions { display: flex; gap: 16px; }
+        .hero-actions .btn { padding: 16px 32px; font-size: 16px; }
+
+        .categories { padding: 0 40px; margin-top: -40px; position: relative; z-index: 2; }
+        .category-pills { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none; }
+        .category-pills::-webkit-scrollbar { display: none; }
+        .category-pill {
+            padding: 12px 24px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+            cursor: pointer; transition: all 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 8px;
+        }
+        .category-pill:hover, .category-pill.active { background: var(--gradient-1); border-color: transparent; color: white; box-shadow: 0 4px 20px rgba(255,51,102,0.3); }
+
+        .region-filter { padding: 40px 40px 0; }
+        .region-tabs { display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; }
+        .region-tab { padding: 10px 20px; background: transparent; border: none; color: var(--text-muted); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.3s; border-radius: var(--radius-sm); }
+        .region-tab:hover { color: var(--text-secondary); }
+        .region-tab.active { background: var(--bg-card); color: var(--text-primary); }
+
+        .section-header { display: flex; justify-content: space-between; align-items: center; padding: 40px 40px 24px; }
+        .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+        .section-title span { background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .tv-grid { padding: 0 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; padding-bottom: 60px; }
+        .tv-card { background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; cursor: pointer; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); position: relative; border: 1px solid transparent; }
+        .tv-card:hover { transform: translateY(-8px); border-color: rgba(255,51,102,0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .tv-card-image { position: relative; height: 160px; overflow: hidden; }
+        .tv-card-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+        .tv-card:hover .tv-card-image img { transform: scale(1.1); }
+        .tv-card-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0%,rgba(0,0,0,0.7) 100%); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .tv-card:hover .tv-card-overlay { opacity: 1; }
+        .play-btn { width: 64px; height: 64px; background: var(--gradient-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: var(--shadow-glow); transform: scale(0.8); transition: transform 0.3s; }
+        .tv-card:hover .play-btn { transform: scale(1); }
+        .tv-card-badge { position: absolute; top: 12px; left: 12px; padding: 6px 12px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); border-radius: 50px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .tv-card-live { background: rgba(255,51,102,0.9); display: flex; align-items: center; gap: 6px; }
+        .tv-card-live::before { content: ''; width: 6px; height: 6px; background: white; border-radius: 50%; animation: pulse 2s infinite; }
+        .tv-card-quality { right: 12px; left: auto; background: var(--gradient-2); }
+        .tv-card-content { padding: 20px; }
+        .tv-card-flag { font-size: 24px; margin-bottom: 12px; }
+        .tv-card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+        .tv-card-category { font-size: 13px; color: var(--accent-primary); font-weight: 500; margin-bottom: 12px; }
+        .tv-card-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .tv-card-viewers { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+        .tv-card-viewers span { color: #22c55e; font-weight: 600; }
+        .tv-card-rating { display: flex; align-items: center; gap: 4px; font-size: 13px; color: #fbbf24; }
+
+        .video-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 40px; }
+        .video-modal.active { display: flex; }
+        .video-modal-content { width: 100%; max-width: 1000px; position: relative; }
+        .video-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .video-modal-title { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; }
+        .close-btn { width: 48px; height: 48px; background: var(--bg-card); border: none; border-radius: 50%; color: var(--text-primary); font-size: 24px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+        .close-btn:hover { background: var(--accent-primary); transform: rotate(90deg); }
+        .video-container { position: relative; width: 100%; aspect-ratio: 16/9; background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; }
+        .video-container video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); padding: 16px 24px; display: flex; align-items: center; gap: 12px; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 3000; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e, #16a34a); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .toast-content { display: flex; flex-direction: column; }
+        .toast-content strong { font-size: 14px; }
+        .toast-content span { font-size: 12px; color: var(--text-muted); }
+
+        .loading-spinner { width: 100%; padding: 60px; text-align: center; }
+        .loading-spinner div { width: 50px; height: 50px; border: 4px solid var(--bg-card); border-top-color: var(--accent-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+        .loading-spinner p { margin-top: 20px; color: var(--text-secondary); }
+
+        .footer { background: var(--bg-secondary); padding: 60px 40px 30px; margin-top: 60px; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 40px; }
+        .footer-brand { max-width: 300px; }
+        .footer-brand .logo { margin-bottom: 20px; }
+        .footer-brand p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+        .footer-column h4 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; }
+        .footer-column ul { list-style: none; }
+        .footer-column li { margin-bottom: 12px; }
+        .footer-column a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .footer-column a:hover { color: var(--accent-primary); }
+        .footer-bottom { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-copyright { font-size: 13px; color: var(--text-muted); }
+        .footer-social { display: flex; gap: 16px; }
+        .footer-social a { width: 40px; height: 40px; background: var(--bg-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.3s; }
+        .footer-social a:hover { background: var(--gradient-1); transform: translateY(-4px); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .header { padding: 16px 20px; }
+            .nav-menu, .search-box { display: none; }
+            .hero { padding: 120px 20px 60px; }
+            .hero h1 { font-size: 40px; }
+            .categories, .region-filter, .section-header, .tv-grid { padding-left: 20px; padding-right: 20px; }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="#" class="logo">
+            <div class="logo-icon">📺</div>
+            <span class="logo-text">StreamVision</span>
+        </a>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#channels">Saluran</a></li>
+                <li><a href="#categories">Kategori</a></li>
+                <li><a href="#about">Tentang</a></li>
+            </ul>
+        </nav>
+        <div class="header-actions">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari saluran TV...">
+            </div>
+            <a href="#channels" class="btn btn-primary">Jelajahi Saluran</a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🎬 Streaming Now</div>
+            <h1>Nonton TV Online<br><span>Seluruh Dunia</span></h1>
+            <p class="hero-description">Akses ribuan saluran TV dari berbagai negara dengan kualitas HD dan 4K. Streaming tanpa batas, kapan saja, di mana saja.</p>
+            <div class="hero-actions">
+                <a href="#channels" class="btn btn-primary">Mulai Streaming</a>
+                <a href="#about" class="btn" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white;">Pelajari Lebih Lanjut</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories" id="categories">
+        <div class="category-pills" id="categoryPills">
+            <div class="loading-spinner"><div></div></div>
+        </div>
+    </section>
+
+    <!-- Region Filter -->
+    <section class="region-filter">
+        <div class="region-tabs" id="regionTabs">
+            <button class="region-tab active" data-region="all">Semua</button>
+            <button class="region-tab" data-region="asia">🌏 Asia</button>
+            <button class="region-tab" data-region="europe">🌍 Eropa</button>
+            <button class="region-tab" data-region="americas">🌎 Amerika</button>
+            <button class="region-tab" data-region="africa">🌍 Afrika</button>
+            <button class="region-tab" data-region="oceania">🌏 Oseania</button>
+        </div>
+    </section>
+
+    <!-- TV Channels -->
+    <section class="section-header" id="channels">
+        <h2 class="section-title">Saluran <span>TV Populer</span></h2>
+        <span id="channelCount" style="color: var(--text-muted);">0 saluran</span>
+    </section>
+    <section class="tv-grid" id="tvGrid">
+        <div class="loading-spinner"><div></div><p>Memuat saluran TV...</p></div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3 class="video-modal-title" id="modalTitle">Memuat...</h3>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <div class="video-container" id="videoContainer">
+                <video id="videoPlayer" controls autoplay playsinline></video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">✓</div>
+        <div class="toast-content">
+            Berhasil menonton
+            <span>Saluran sedang diputar</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="about">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <div class="logo-icon">📺</div>
+                    <span class="logo-text">StreamVision</span>
+                </a>
+                <p>Platform streaming TV online terbaik yang menghadirkan hiburan dari seluruh dunia langsung ke layar Anda.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Navigasi</h4>
+                <ul>
+                    <li><a href="#home">Beranda</a></li>
+                    <li><a href="#channels">Saluran</a></li>
+                    <li><a href="#categories">Kategori</a></li>
+                    <li><a href="#about">Tentang</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Kategori</h4>
+                <ul>
+                    <li><a href="#">Berita</a></li>
+                    <li><a href="#">Olahraga</a></li>
+                    <li><a href="#">Hiburan</a></li>
+                    <li><a href="#">Dokumenter</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Kontak</h4>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Kebijakan Privasi</a></li>
+                    <li><a href="#">Syarat & Ketentuan</a></li>
+                    <li><a href="#">Hubungi Kami</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p class="footer-copyright">© 2024 StreamVision. All rights reserved.</p>
+            <div class="footer-social">
+                <a href="#">📘</a>
+                <a href="#">🐦</a>
+                <a href="#">📸</a>
+                <a href="#">📺</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // API Base URL - Change this to your API endpoint
+        const API_BASE = 'http://localhost:3000/api';
+
+        // State
+        let tvChannels = [];
+        let currentCategory = 'all';
+        let currentRegion = 'all';
+        let hls = null;
+
+        // DOM Elements
+        const tvGrid = document.getElementById('tvGrid');
+        const categoryPills = document.getElementById('categoryPills');
+        const regionTabs = document.getElementById('regionTabs');
+        const searchInput = document.getElementById('searchInput');
+        const channelCount = document.getElementById('channelCount');
+        const videoModal = document.getElementById('videoModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const videoContainer = document.getElementById('videoContainer');
+
+        // Fetch channels from API
+        async function fetchChannels() {
+            try {
+                const response = await fetch(API_BASE + '/channels');
+                const data = await response.json();
+                if (data.success) {
+                    tvChannels = data.data;
+                    renderCategories();
+                    renderTVCards();
+                }
+            } catch (error) {
+                console.error('Failed to fetch channels:', error);
+                tvGrid.innerHTML = '<p style="text-align:center;color:#ff3366;padding:40px;">Gagal memuat data. Pastikan API server berjalan.</p>';
+            }
+        }
+
+        // Render category pills
+        function renderCategories() {
+            const categories = ['all', ...new Set(tvChannels.map(c => c.category))];
+            const emojiMap = {
+                'all': '📺', 'news': '📰', 'sports': '⚽', 'entertainment': '🎬',
+                'documentary': '📚', 'kids': '👶', 'music': '🎵', 'lifestyle': '🍳'
+            };
+            
+            categoryPills.innerHTML = categories.map(cat => `
+                <button class="category-pill ${cat === 'all' ? 'active' : ''}" data-category="${cat}">
+                    <span class="emoji">${emojiMap[cat] || '📺'}</span>
+                    ${cat === 'all' ? 'Semua' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </button>
+            `).join('');
+
+            // Add click listeners
+            categoryPills.querySelectorAll('.category-pill').forEach(pill => {
+                pill.addEventListener('click', () => {
+                    categoryPills.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    currentCategory = pill.dataset.category;
+                    renderTVCards();
+                });
+            });
+        }
+
+        // Render TV cards
+        function renderTVCards() {
+            let filtered = [...tvChannels];
+            
+            // Filter by category
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(c => c.category === currentCategory);
+            }
+            
+            // Filter by region
+            if (currentRegion !== 'all') {
+                filtered = filtered.filter(c => c.region === currentRegion);
+            }
+            
+            // Filter by search
+            const search = searchInput.value.toLowerCase();
+            if (search) {
+                filtered = filtered.filter(c => 
+                    c.name.toLowerCase().includes(search) || 
+                    c.countryName.toLowerCase().includes(search)
+                );
+            }
+            
+            channelCount.textContent = `${filtered.length} saluran`;
+
+            if (filtered.length === 0) {
+                tvGrid.innerHTML = '<p style="text-align:center;color:#888;padding:40px;">Tidak ada saluran yang ditemukan</p>';
+                return;
+            }
+
+            tvGrid.innerHTML = filtered.map((channel, index) => `
+                <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
+                    <div class="tv-card-image">
+                        <img src="${channel.image}" alt="${channel.name}" loading="lazy">
+                        <div class="tv-card-overlay">
+                            <div class="play-btn">▶</div>
+                        </div>
+                        <div class="tv-card-badge tv-card-live">LIVE</div>
+                        <div class="tv-card-badge tv-card-quality">${channel.quality}</div>
+                    </div>
+                    <div class="tv-card-content">
+                        <div class="tv-card-flag">${channel.country}</div>
+                        <h3 class="tv-card-title">${channel.name}</h3>
+                        <p class="tv-card-category">${channel.category}</p>
+                        <div class="tv-card-meta">
+                            <div class="tv-card-viewers">
+                                👁 <span>${(channel.viewers / 1000000).toFixed(1)}M</span> viewers
+                            </div>
+                            <div class="tv-card-rating">
+                                ⭐ ${channel.rating}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Open channel
+        function openChannel(id) {
+            const channel = tvChannels.find(c => c.id === id);
+            if (channel) {
+                modalTitle.textContent = `${channel.country} ${channel.name}`;
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                playStream(channel);
+                showToast(channel.name);
+            }
+        }
+
+        // Play stream
+        function playStream(channel) {
+            const video = document.getElementById('videoPlayer');
+            
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+
+            videoContainer.innerHTML = `
+                <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;color:#fff;">
+                    <div style="width:60px;height:60px;border:4px solid #333;border-top-color:#ff3366;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    <p style="margin-top:20px;">Memuat streaming...</p>
+                    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+                </div>
+            `;
+
+            if (Hls.isSupported()) {
+                hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+                hls.loadSource(channel.streamUrl);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    videoContainer.innerHTML = '<video id="videoPlayer" controls autoplay playsinline></video>';
+                    const newVideo = document.getElementById('videoPlayer');
+                    hls.attachMedia(newVideo);
+                    newVideo.play().catch(() => {});
+                });
+                
+                hls.on(Hls.Events.ERROR, () => {
+                    videoContainer.innerHTML = `
+                        <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a25;color:#fff;">
+                            <p>⚠️ Gagal memuat streaming</p>
+                            <button onclick="playStream(tvChannels.find(c=>c.id===${channel.id}))" style="margin-top:20px;padding:12px 24px;background:#ff3366;border:none;border-radius:25px;color:#fff;cursor:pointer;">Coba Lagi</button>
+                        </div>
+                    `;
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = channel.streamUrl;
+                video.play().catch(() => {});
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            if (hls) {
+                hls.destroy();
+                hls = null;
+            }
+            videoContainer.innerHTML = '<video id="videoPlayer" controls autoplay playsinline></video>';
+            videoModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Show toast
+        function showToast(channelName) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('.toast-content').innerHTML = `
+                Sekarang menonton <strong>${channelName}</strong>
+                <span>Streaming dalam kualitas tinggi</span>
+            `;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Event listeners
+        regionTabs.querySelectorAll('.region-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                regionTabs.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentRegion = tab.dataset.region;
+                renderTVCards();
+            });
+        });
+
+        searchInput.addEventListener('input', renderTVCards);
+
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Initialize
+        fetchChannels();
+    </script>
+</body>
+</html>
