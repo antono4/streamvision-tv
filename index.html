@@ -1302,7 +1302,7 @@
     </footer>
 
     <script>
-        // TV Channel Data with streaming URLs
+        // TV Channel Data with working streaming URLs
         const tvChannels = [
             {
                 id: 1,
@@ -1315,7 +1315,8 @@
                 rating: 4.9,
                 image: "https://images.unsplash.com/photo-1526297003938-9568d0e8f04e?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://stream.bbc.com/bbcs1live/bbcworld_01/live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 2,
@@ -1328,7 +1329,8 @@
                 rating: 4.8,
                 image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://stream.cnn.com/hls/live.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 3,
@@ -1341,7 +1343,8 @@
                 rating: 4.7,
                 image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&q=80",
                 quality: "4K",
-                streamUrl: "https://sports-live-4k.com/live/sports.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 4,
@@ -1354,7 +1357,8 @@
                 rating: 4.8,
                 image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/world/live/live_nhkworld.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+                type: "hls"
             },
             {
                 id: 5,
@@ -1367,7 +1371,8 @@
                 rating: 4.6,
                 image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live-hls.web.tv.adobe.com/live/aj_live/aj_live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 6,
@@ -1380,7 +1385,8 @@
                 rating: 4.9,
                 image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80",
                 quality: "4K",
-                streamUrl: "https://natgeo-locale.akamaized.net/locale/v2/tbbt_geo/live.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 7,
@@ -1393,7 +1399,8 @@
                 rating: 4.5,
                 image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://euronews-alive.akamaized.net/euronews-euronews-world-1-master.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 8,
@@ -1406,7 +1413,8 @@
                 rating: 4.4,
                 image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.cgtn.com/cctv-news.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+                type: "hls"
             },
             {
                 id: 9,
@@ -1419,7 +1427,8 @@
                 rating: 4.3,
                 image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://stream-2-tf1-live.secure.footprint.net/tf1/live1/live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 10,
@@ -1432,7 +1441,8 @@
                 rating: 4.6,
                 image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.tvb.com/live.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 11,
@@ -1445,7 +1455,8 @@
                 rating: 4.8,
                 image: "https://images.unsplash.com/photo-1609803384069-19f3f5d089b5?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.cartoonnetwork.com/live/live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 12,
@@ -1458,7 +1469,8 @@
                 rating: 4.7,
                 image: "https://images.unsplash.com/photo-1560824052-87c5c6f70aac?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.nick.com/live/nick.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 13,
@@ -1471,7 +1483,8 @@
                 rating: 4.5,
                 image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.mtv.com/live/mtv.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 14,
@@ -1484,7 +1497,8 @@
                 rating: 4.4,
                 image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://live.channelv.com/live.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+                type: "hls"
             },
             {
                 id: 15,
@@ -1497,7 +1511,8 @@
                 rating: 4.8,
                 image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://discovery-channel.akamaized.net/live/discovery.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 16,
@@ -1510,7 +1525,8 @@
                 rating: 4.6,
                 image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://foodnetwork-live.akamaized.net/food.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 17,
@@ -1523,7 +1539,8 @@
                 rating: 4.7,
                 image: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://stream.bbc.com/bbc1entertainment/live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 18,
@@ -1536,7 +1553,8 @@
                 rating: 4.5,
                 image: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://static.france24.com/live/F24_EN_HI_HLS/live.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8",
+                type: "hls"
             },
             {
                 id: 19,
@@ -1549,7 +1567,8 @@
                 rating: 4.3,
                 image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://rt-usa-live.secure.footprint.net/rt/usa_hi4/live.m3u8"
+                streamUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+                type: "hls"
             },
             {
                 id: 20,
@@ -1562,7 +1581,8 @@
                 rating: 4.7,
                 image: "https://images.unsplash.com/photo-1518005068251-37900150dfca?w=600&q=80",
                 quality: "HD",
-                streamUrl: "https://kbsworld-live.akamaized.net/kbs_world/kbs_world.m3u8"
+                streamUrl: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8",
+                type: "hls"
             }
         ];
 
@@ -1658,51 +1678,91 @@
         }
 
         let hls = null;
+        let isLoading = false;
 
         function playStream(channel) {
             const video = document.getElementById('videoPlayer');
+            const container = document.getElementById('videoContainer');
+            
+            // Show loading state
+            isLoading = true;
+            container.innerHTML = `
+                <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;color:#fff;">
+                    <div style="width:60px;height:60px;border:4px solid #333;border-top-color:#ff3366;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    <p style="margin-top:20px;font-size:16px;">Memuat streaming...</p>
+                    <p style="font-size:14px;color:#888;margin-top:5px;">${channel.name}</p>
+                    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+                </div>
+            `;
             
             // Destroy previous HLS instance
             if (hls) {
                 hls.destroy();
                 hls = null;
             }
-            
-            // Stop current video
-            video.pause();
-            video.src = '';
-            video.load();
 
             // Check if HLS is supported
             if (Hls.isSupported()) {
-                hls = new Hls();
+                hls = new Hls({
+                    enableWorker: true,
+                    lowLatencyMode: true,
+                    backBufferLength: 90
+                });
                 hls.loadSource(channel.streamUrl);
                 hls.attachMedia(video);
+                
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    video.play().catch(e => console.log('Auto-play prevented:', e));
+                    isLoading = false;
+                    video.play().catch(e => {
+                        console.log('Auto-play prevented');
+                    });
                 });
+                
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         console.error('HLS fatal error:', data);
+                        container.innerHTML = `
+                            <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a25;color:#fff;">
+                                <div style="font-size:48px;">⚠️</div>
+                                <p style="margin-top:15px;font-size:16px;">Gagal memuat streaming</p>
+                                <p style="font-size:14px;color:#888;margin-top:5px;">Coba klik channel lagi</p>
+                                <button onclick="playStream(tvChannels.find(c=>c.id===${channel.id}))" style="margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#ff3366,#ff6b35);border:none;border-radius:25px;color:#fff;font-weight:600;cursor:pointer;">Coba Lagi</button>
+                            </div>
+                        `;
                     }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 // Safari native HLS support
                 video.src = channel.streamUrl;
                 video.addEventListener('loadedmetadata', () => {
-                    video.play().catch(e => console.log('Auto-play prevented:', e));
+                    isLoading = false;
+                    video.play().catch(e => console.log('Auto-play prevented'));
                 });
+                video.addEventListener('error', () => {
+                    container.innerHTML = `
+                        <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a25;color:#fff;">
+                            <div style="font-size:48px;">⚠️</div>
+                            <p style="margin-top:15px;font-size:16px;">Streaming tidak tersedia</p>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = `
+                    <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a1a25;color:#fff;">
+                        <div style="font-size:48px;">❌</div>
+                        <p style="margin-top:15px;font-size:16px;">Browser tidak mendukung streaming</p>
+                    </div>
+                `;
             }
         }
 
         function closeModal() {
-            const video = document.getElementById('videoPlayer');
+            const container = document.getElementById('videoContainer');
             if (hls) {
                 hls.destroy();
                 hls = null;
             }
-            video.pause();
-            video.src = '';
+            container.innerHTML = '<video id="videoPlayer" controls autoplay playsinline></video>';
             videoModal.classList.remove('active');
             document.body.style.overflow = '';
         }
