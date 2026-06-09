@@ -2050,38 +2050,46 @@
     </script>
 </body>
     
-    <!-- Force initialization -->
+    <!-- Force initialization - runs after main script -->
     <script>
-        // Immediate initialization
-        (function() {
+        // Wait for main script to complete
+        function forceInit() {
             console.log('Force init: Starting');
-            var channelCount = typeof tvChannels !== 'undefined' ? tvChannels.length : 0;
-            console.log('Force init: tvChannels found, count =', channelCount);
             
-            // Wait for DOM to be ready
+            // Check if main script already rendered
+            if (typeof tvChannels !== 'undefined') {
+                console.log('Force init: tvChannels found, count =', tvChannels.length);
+            } else {
+                console.log('Force init: tvChannels not defined yet');
+            }
+            
+            // Wait for DOM and main script
             function doInit() {
                 console.log('Force init: doInit called');
                 var tvGrid = document.getElementById('tvGrid');
                 if (!tvGrid) {
-                    console.log('Force init: tvGrid not found, retrying...');
-                    setTimeout(doInit, 100);
+                    console.log('Force init: tvGrid not found');
                     return;
                 }
                 
                 // Check if cards already rendered
-                if (tvGrid.querySelectorAll('.tv-card').length > 0) {
-                    console.log('Force init: Cards already rendered');
+                var existingCards = tvGrid.querySelectorAll('.tv-card').length;
+                console.log('Force init: Existing cards:', existingCards);
+                
+                // Get channels from main script
+                if (typeof tvChannels === 'undefined') {
+                    console.log('Force init: tvChannels still not available, retrying...');
+                    setTimeout(doInit, 200);
                     return;
                 }
                 
-                // Get channels
-                var channels = typeof tvChannels !== 'undefined' ? tvChannels : [];
+                var channels = tvChannels;
                 console.log('Force init: Rendering', channels.length, 'channels');
                 
-                // Render
+                // Render cards
                 var html = '';
                 channels.forEach(function(channel, index) {
-                    html += '<div class="tv-card" onclick="openChannel(' + channel.id + ')" style="animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">';
+                    html += '<div class="tv-card" data-id="' + channel.id + '" onclick="openChannel(' + channel.id + ')" style="animation: fadeInUp 0.5s ease ' + (index * 0.05) + 's both;">';
                     html += '<div class="tv-card-image">';
                     html += '<img src="' + channel.image + '" alt="' + channel.name + '" loading="lazy">';
                     html += '<div class="tv-card-overlay"><div class="play-btn">▶</div></div>';
@@ -2099,18 +2107,14 @@
                 });
                 
                 tvGrid.innerHTML = html;
-                console.log('Force init: Rendered', channels.length, 'cards');
+                console.log('Force init: Done rendering', channels.length, 'cards');
             }
             
-            // Try immediately
-            if (document.readyState === 'complete') {
-                doInit();
-            } else {
-                window.addEventListener('load', doInit);
-            }
-            
-            // Also try after a delay
-            setTimeout(doInit, 1000);
-        })();
+            // Start after small delay to ensure main script has run
+            setTimeout(doInit, 100);
+        }
+        
+        // Run force init
+        forceInit();
     </script>
 </html>
