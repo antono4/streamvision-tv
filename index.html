@@ -1948,9 +1948,14 @@
         }
         
         // Call init when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Ready - Starting init');
+            init();
+        });
+        
+        // Also try immediate execution if DOM already loaded
+        if (document.readyState !== 'loading') {
+            console.log('DOM already loaded - Starting init');
             init();
         }
 
