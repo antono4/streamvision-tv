@@ -1900,19 +1900,53 @@
 
         // Initialize
         function init() {
+            console.log('StreamVision TV initializing...');
+            console.log('Total channels in data:', tvChannels.length);
+            
             const apiStatus = document.getElementById('apiStatus');
             
             // Always start with local data first
             filteredChannels = [...tvChannels];
-            console.log('Init: Starting with', tvChannels.length, 'channels');
+            console.log('Filtered channels:', filteredChannels.length);
+            
+            // Get DOM element
+            const tvGridElement = document.getElementById('tvGrid');
+            console.log('tvGrid element found:', !!tvGridElement);
+            
+            if (!tvGridElement) {
+                console.error('tvGrid element not found!');
+                return;
+            }
             
             // Render cards immediately with local data
-            if (typeof renderTVCards === 'function') {
-                console.log('Init: Rendering', filteredChannels.length, 'cards');
-                renderTVCards();
-            } else {
-                console.error('renderTVCards function not found!');
-            }
+            const html = filteredChannels.map((channel, index) => `
+                <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
+                    <div class="tv-card-image">
+                        <img src="${channel.image}" alt="${channel.name}" loading="lazy">
+                        <div class="tv-card-overlay">
+                            <div class="play-btn">▶</div>
+                        </div>
+                        <div class="tv-card-badge tv-card-live">LIVE</div>
+                        <div class="tv-card-badge tv-card-quality">${channel.quality}</div>
+                    </div>
+                    <div class="tv-card-content">
+                        <div class="tv-card-flag">${channel.country}</div>
+                        <h3 class="tv-card-title">${channel.name}</h3>
+                        <p class="tv-card-category">${getCategoryName(channel.category)}</p>
+                        <div class="tv-card-meta">
+                            <div class="tv-card-viewers">
+                                <span>●</span> ${formatViewers(channel.viewers)} penonton
+                            </div>
+                            <div class="tv-card-rating">
+                                ★ ${channel.rating}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            tvGridElement.innerHTML = html;
+            console.log('Rendered', html.split('tv-card').length - 1, 'cards');
             
             // Try to fetch from API in background
             fetch(API_BASE + '/api/health')
@@ -1923,7 +1957,6 @@
                         apiStatus.className = 'api-status online';
                         apiStatus.querySelector('.status-text').textContent = 'API Online';
                         
-                        // Fetch channels from API
                         return fetch(API_BASE + '/api/channels');
                     }
                     throw new Error('API not available');
@@ -1935,7 +1968,33 @@
                         tvChannels.length = 0;
                         apiChannels.forEach(ch => tvChannels.push(ch));
                         filteredChannels = [...tvChannels];
-                        renderTVCards();
+                        // Re-render with API data
+                        const newHtml = filteredChannels.map((channel, index) => `
+                            <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
+                                <div class="tv-card-image">
+                                    <img src="${channel.image}" alt="${channel.name}" loading="lazy">
+                                    <div class="tv-card-overlay">
+                                        <div class="play-btn">▶</div>
+                                    </div>
+                                    <div class="tv-card-badge tv-card-live">LIVE</div>
+                                    <div class="tv-card-badge tv-card-quality">${channel.quality}</div>
+                                </div>
+                                <div class="tv-card-content">
+                                    <div class="tv-card-flag">${channel.country}</div>
+                                    <h3 class="tv-card-title">${channel.name}</h3>
+                                    <p class="tv-card-category">${getCategoryName(channel.category)}</p>
+                                    <div class="tv-card-meta">
+                                        <div class="tv-card-viewers">
+                                            <span>●</span> ${formatViewers(channel.viewers)} penonton
+                                        </div>
+                                        <div class="tv-card-rating">
+                                            ★ ${channel.rating}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        tvGridElement.innerHTML = newHtml;
                         console.log('Updated to', filteredChannels.length, 'channels from API');
                     }
                 })
@@ -1948,14 +2007,9 @@
         }
         
         // Call init when DOM is ready
-        window.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Ready - Starting init');
-            init();
-        });
-        
-        // Also try immediate execution if DOM already loaded
-        if (document.readyState !== 'loading') {
-            console.log('DOM already loaded - Starting init');
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
             init();
         }
 
