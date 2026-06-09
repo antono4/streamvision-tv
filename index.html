@@ -1918,6 +1918,12 @@
                 return;
             }
             
+            // Check if cards already exist
+            if (tvGridElement.querySelectorAll('.tv-card').length > 0) {
+                console.log('Cards already rendered, skipping');
+                return;
+            }
+            
             // Render cards immediately with local data
             const html = filteredChannels.map((channel, index) => `
                 <div class="tv-card" data-id="${channel.id}" onclick="openChannel(${channel.id})" style="animation: fadeInUp 0.5s ease ${index * 0.05}s both;">
@@ -2012,6 +2018,9 @@
         } else {
             init();
         }
+        
+        // Expose init to window for debugging
+        window.initTV = init;
         
         // Fallback: call init after a short delay to ensure DOM is ready
         setTimeout(function() {
