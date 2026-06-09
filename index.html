@@ -1865,51 +1865,57 @@
         });
 
         // Initialize
-        async function init() {
+        function init() {
             const apiStatus = document.getElementById('apiStatus');
             
             // Always start with local data first
             filteredChannels = [...tvChannels];
             
-            // Try to fetch from API
-            try {
-                const response = await fetch(API_BASE + '/api/health');
-                if (response.ok) {
-                    const data = await response.json();
+            // Render cards immediately with local data
+            if (typeof renderTVCards === 'function') {
+                renderTVCards();
+                console.log('Rendered', filteredChannels.length, 'channels with local data');
+            }
+            
+            // Try to fetch from API in background
+            fetch(API_BASE + '/api/health')
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
                         isAPIConnected = true;
                         apiStatus.className = 'api-status online';
                         apiStatus.querySelector('.status-text').textContent = 'API Online';
                         
                         // Fetch channels from API
-                        const channelsResponse = await fetch(API_BASE + '/api/channels');
-                        if (channelsResponse.ok) {
-                            const channelsData = await channelsResponse.json();
-                            if (channelsData.success && channelsData.data.length > 0) {
-                                apiChannels = channelsData.data;
-                                tvChannels.length = 0;
-                                apiChannels.forEach(ch => tvChannels.push(ch));
-                                filteredChannels = [...tvChannels];
-                            }
-                        }
+                        return fetch(API_BASE + '/api/channels');
                     }
-                } else {
-                    throw new Error('API not responding');
-                }
-            } catch (error) {
-                console.log('API not available, using local data');
-                isAPIConnected = false;
-                apiStatus.className = 'api-status offline';
-                apiStatus.querySelector('.status-text').textContent = 'Local Mode';
-            }
-            
-            // Always render cards immediately
-            renderTVCards();
-            console.log('Rendered', filteredChannels.length, 'channels');
+                    throw new Error('API not available');
+                })
+                .then(response => response.json())
+                .then(channelsData => {
+                    if (channelsData.success && channelsData.data.length > 0) {
+                        apiChannels = channelsData.data;
+                        tvChannels.length = 0;
+                        apiChannels.forEach(ch => tvChannels.push(ch));
+                        filteredChannels = [...tvChannels];
+                        renderTVCards();
+                        console.log('Updated to', filteredChannels.length, 'channels from API');
+                    }
+                })
+                .catch(error => {
+                    console.log('API not available, using local data');
+                    isAPIConnected = false;
+                    apiStatus.className = 'api-status offline';
+                    apiStatus.querySelector('.status-text').textContent = 'Local Mode';
+                });
         }
         
-        // Call init immediately when script loads
-        init();
+        // Call init when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
 
         // Animate cards on scroll
         const observer = new IntersectionObserver((entries) => {
