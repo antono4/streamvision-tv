@@ -1,5 +1,7 @@
 # StreamVision TV 📺
 
+![StreamVision Banner](https://images.unsplash.com/photo-1598786949015-85a5c7e5c3c2?w=800)
+
 Live streaming and video broadcasting platform.
 
 ## ✨ Features
