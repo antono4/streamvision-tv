@@ -18,7 +18,7 @@
 
 ## 📖 Tentang
 
-Repository **`streamvision-tv`** adalah situs statis yang dibangun dengan HTML, JavaScript.
+Repository **`streamvision-tv`** adalah proyek Node.js yang dibangun dengan HTML, JavaScript.
 Situs ini diterbitkan melalui **GitHub Pages** dan dapat diakses di [`https://antono4.github.io/streamvision-tv/`](https://antono4.github.io/streamvision-tv/).
 
 ## 🗂️ Struktur Proyek
@@ -61,11 +61,11 @@ Berdasarkan ekstensi berkas yang terdeteksi di repository:
 
 ## 🚀 Menjalankan Secara Lokal
 
-Tanpa dependency apa pun. Buka `index.html` langsung di browser, atau jalankan server statis:
+Butuh Node.js:
 
 ```bash
-python3 -m http.server 8000
-# lalu buka http://localhost:8000
+npm install
+npm run dev
 ```
 
 ## 📬 Kontak
